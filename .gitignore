@@ -26,3 +26,6 @@ eggs/
 .vscode/*
 *.so
 *-checkpoint.ipynb
+dataset
+saved_dir
+.json
