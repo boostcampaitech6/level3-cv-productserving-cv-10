@@ -26,22 +26,14 @@ class SPDocVQA(Dataset):
 
     def __getitem__(self, idx):
         record = self.imdb[idx]
-        # print(record)
         question = record['question']
-        # print(len(question)) #내가
         context = ' '.join([word.lower() for word in record['ocr_tokens']])
         context_page_corresp = [0 for ix in range(len(context))]  # This is used to predict the answer page in MP-DocVQA. To keep it simple, use a mock list with corresponding page to 0.
-        # print(record) #내가 
         
-        #나중에 if문 걸어서 train/inference 따로 
-        answers = list(set(answer.lower() for answer in record['answers']))
-        # print(answers)
-        # answers = list(set(answer.lower() for answer in record.get('answers', [])))
-        # answers = ['0' * len(question)] ###### 이거 
+        # answers = list(set(answer.lower() for answer in record['answers']))
 
         if self.use_images:
-            # image_name = os.path.join(self.images_dir, "{:s}.png".format(record['image_name']))
-            image_name = os.path.join(self.images_dir, "{:s}".format(record['image_name']))
+            image_name = os.path.join(self.images_dir, "{:s}.png".format(record['image_name']))
             image = Image.open(image_name).convert("RGB")
 
         if self.get_raw_ocr_data:
@@ -59,7 +51,7 @@ class SPDocVQA(Dataset):
         sample_info = {'question_id': record['question_id'],
                        'questions': question,
                        'contexts': context,
-                       'answers': answers,
+                    #    'answers': answers,
                        'start_indxs': start_idxs,
                        'end_indxs': end_idxs
                        }

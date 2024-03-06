@@ -46,13 +46,18 @@ def evaluate(data_loader, model, evaluator, **kwargs):
 
         if return_scores_by_sample:
             for batch_idx in range(bs):
+                #여기다가 만약 inference 단계이면 answer 필요한 부분 다 빼기
                 scores_by_samples[batch['question_id'][batch_idx]] = {
                     'accuracy': metric['accuracy'][batch_idx],
                     'anls': metric['anls'][batch_idx],
                     'ret_prec': ret_metric[batch_idx],
                     'pred_answer': pred_answers[batch_idx],
                     'pred_answer_conf': answer_conf[batch_idx],
-                    'pred_answer_page': pred_answer_page[batch_idx] if pred_answer_page is not None else None
+                    'pred_answer_page': pred_answer_page[batch_idx] if pred_answer_page is not None else None,
+                    'image_names' : batch['image_names'][batch_idx], # 여기서 부터 추가한 부분
+                    'question' : batch['questions'][batch_idx], 
+
+                    
                 }
 
         if return_scores_by_sample:
@@ -112,7 +117,16 @@ if __name__ == '__main__':
 
     experiment_date = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
     results_file = os.path.join(config['save_dir'], 'results', "{:}_{:}_{:}__{:}.json".format(config['model_name'], config['dataset_name'], config.get('page_retrieval', '').lower(), experiment_date))
-    save_json(results_file, save_data)
+    
+    # print(save_data)
+    import json
+    # print(data)
+    with open('aaa.json', 'w') as f:
+        json.dump(save_data, f, indent=4)
+
+    
+    
+    # save_json(results_file, save_data)
 
     print("Results correctly saved in: {:s}".format(results_file))
 

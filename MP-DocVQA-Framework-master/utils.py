@@ -52,11 +52,13 @@ def parse_multitype2list_arg(argument):
 
 
 def save_json(path, data):
+    # print(data)
     with open(path, 'w+') as f:
         json.dump(data, f)
 
 
 def save_yaml(path, data):
+    # print(data)
     with open(path, 'w+') as f:
         yaml.dump(data, f)
 

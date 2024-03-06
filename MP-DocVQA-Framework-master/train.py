@@ -42,13 +42,13 @@ def train_epoch(data_loader, model, optimizer, lr_scheduler, evaluator, logger, 
             'lr': optimizer.param_groups[0]['lr']
         }
 
-        if hasattr(outputs, 'ret_loss'):
-            log_dict['Train/Batch retrieval loss'] = outputs.ret_loss.item()
+        # if hasattr(outputs, 'ret_loss'):
+        #     log_dict['Train/Batch retrieval loss'] = outputs.ret_loss.item()
 
-        if 'answer_page_idx' in batch and None not in batch['answer_page_idx']:
-            ret_metric = evaluator.get_retrieval_metric(batch.get('answer_page_idx', None), pred_answer_page)
-            batch_ret_prec = np.mean(ret_metric)
-            log_dict['Train/Batch Ret. Prec.'] = batch_ret_prec
+        # if 'answer_page_idx' in batch and None not in batch['answer_page_idx']:
+        #     ret_metric = evaluator.get_retrieval_metric(batch.get('answer_page_idx', None), pred_answer_page)
+        #     batch_ret_prec = np.mean(ret_metric)
+        #     log_dict['Train/Batch Ret. Prec.'] = batch_ret_prec
 
         logger.logger.log(log_dict, step=logger.current_epoch * logger.len_dataset + batch_idx)
 
@@ -96,7 +96,6 @@ def train(model, **kwargs):
         logger.current_epoch = epoch_ix
         train_epoch(train_data_loader, model, optimizer, lr_scheduler, evaluator, logger, **kwargs)
         accuracy, anls, ret_prec, _, _ = evaluate(val_data_loader, model, evaluator, return_scores_by_sample=False, return_pred_answers=False, **kwargs)
-
         is_updated = evaluator.update_global_metrics(accuracy, anls, epoch_ix)
         logger.log_val_metrics(accuracy, anls, ret_prec, update_best=is_updated)
         save_model(model, epoch_ix, update_best=is_updated, **kwargs)
@@ -105,7 +104,9 @@ def train(model, **kwargs):
 if __name__ == '__main__':
     args = parse_args()
     config = load_config(args)
-
+    # print()
+    # print(config)
+    # print()
     model = build_model(config)
 
     train(model, **config)
