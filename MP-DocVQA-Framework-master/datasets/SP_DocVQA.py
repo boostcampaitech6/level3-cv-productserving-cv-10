@@ -34,10 +34,13 @@ class SPDocVQA(Dataset):
         # print(record) #내가 
         
         #나중에 if문 걸어서 train/inference 따로 
-        answers = list(set(answer.lower() for answer in record['answers']))
+        if 'answers' in record :
+            answers = list(set(answer.lower() for answer in record['answers']))
+        else : 
+            answers = ['0' * len(question)] ###### 이거 
         # print(answers)
         # answers = list(set(answer.lower() for answer in record.get('answers', [])))
-        # answers = ['0' * len(question)] ###### 이거 
+        
 
         if self.use_images:
             # image_name = os.path.join(self.images_dir, "{:s}.png".format(record['image_name']))
@@ -106,4 +109,4 @@ def singlepage_docvqa_collate_fn(batch):
 
 if __name__ == '__main__':
     # singlepage_docvqa = SPDocVQA("/SSD/Datasets/DocVQA/Task1/pythia_data/imdb/docvqa/", split='val')
-    singlepage_docvqa = SPDocVQA("/home/ges/level3-cv-productserving-cv-10/data/sp-vqa/ibmb", split='val')
+    singlepage_docvqa = SPDocVQA("/home/ges/level3-cv-productserving-cv-10/data/infographics/imdb", split='val')

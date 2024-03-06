@@ -46,7 +46,7 @@ def evaluate(data_loader, model, evaluator, **kwargs):
 
         if return_scores_by_sample:
             for batch_idx in range(bs):
-                #여기다가 만약 inference 단계이면 answer 필요한 부분 다 빼기
+                #TODO : 여기다가 만약 inference 단계이면 answer 필요한 부분 다 빼기
                 scores_by_samples[batch['question_id'][batch_idx]] = {
                     'accuracy': metric['accuracy'][batch_idx],
                     'anls': metric['anls'][batch_idx],
@@ -121,7 +121,7 @@ if __name__ == '__main__':
     # print(save_data)
     import json
     # print(data)
-    with open('aaa.json', 'w') as f:
+    with open('inference.json', 'w') as f:
         json.dump(save_data, f, indent=4)
 
     
