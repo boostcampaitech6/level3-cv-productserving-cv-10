@@ -28,4 +28,9 @@ eggs/
 *-checkpoint.ipynb
 dataset
 saved_dir
-.json
+*.json
+*.jpeg
+*.gz
+*.zip
+*.npy
+*.run
