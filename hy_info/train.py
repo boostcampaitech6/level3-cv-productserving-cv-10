@@ -104,9 +104,9 @@ def train(model, **kwargs):
 if __name__ == '__main__':
     args = parse_args()
     config = load_config(args)
-    # print()
-    # print(config)
-    # print()
+    print()
+    print(config)
+    print()
     model = build_model(config)
 
     train(model, **config)
