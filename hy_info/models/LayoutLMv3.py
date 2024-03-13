@@ -159,6 +159,6 @@ class LayoutLMv3:
                 conf_mat[start_idxs[batch_idx], end_idxs[batch_idx]].item()
             )
 
-        aansw_confidence = model_utils.get_extractive_confidence(outputs)
+        answ_confidence = model_utils.get_extractive_confidence(outputs)
 
         return answers, answ_confidence

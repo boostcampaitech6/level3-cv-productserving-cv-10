@@ -6,8 +6,8 @@ import numpy as np
 import torch
 from torch.utils.data import DataLoader
 
-from datasets.SP_DocVQA import SPDocVQA, singlepage_docvqa_collate_fn
-from models.Longformer import Longformer
+from datasets.IF_DocVQA import Info_docvqa_collate_fn
+# from models.Longformer import Longformer
 from eval import evaluate
 from metrics import Evaluator
 from build_utils import build_model, build_optimizer, build_dataset
@@ -21,9 +21,14 @@ def train_epoch(data_loader, model, optimizer, lr_scheduler, evaluator, logger, 
 
     for batch_idx, batch in enumerate(tqdm(data_loader)):
         gt_answers = batch['answers']
-        outputs, pred_answers, pred_answer_page, answer_conf = model.forward(batch, return_pred_answer=True)
-        loss = outputs.loss + outputs.ret_loss if hasattr(outputs, 'ret_loss') else outputs.loss
+        # outputs, pred_answers, pred_answer_page, answer_conf = model.forward(batch, return_pred_answer=True)
+        # outputs, pred_answers, answer_conf = model.forward(batch, return_pred_answer=True)
+        # print(len(model.forward(batch, return_pred_answer=True)))
+        outputs, pred_answers, _ = model.forward(batch, return_pred_answer=True)
 
+        # loss = outputs.loss + outputs.ret_loss if hasattr(outputs, 'ret_loss') else outputs.loss
+        loss = outputs.loss
+ 
         loss.backward()
         optimizer.step()
         lr_scheduler.step()
@@ -37,7 +42,7 @@ def train_epoch(data_loader, model, optimizer, lr_scheduler, evaluator, logger, 
 
         log_dict = {
             'Train/Batch loss': outputs.loss.item(),
-            'Train/Batch Accuracy': batch_acc,
+            'Train/Batch Accuracy': batch_acc,         
             'Train/Batch ANLS': batch_anls,
             'lr': optimizer.param_groups[0]['lr']
         }
@@ -78,8 +83,8 @@ def train(model, **kwargs):
     # g = torch.Generator()
     # g.manual_seed(kwargs['seed'])
 
-    train_data_loader = DataLoader(train_dataset, batch_size=config['batch_size'], shuffle=True, collate_fn=singlepage_docvqa_collate_fn)
-    val_data_loader   = DataLoader(val_dataset, batch_size=config['batch_size'], shuffle=False, collate_fn=singlepage_docvqa_collate_fn)
+    train_data_loader = DataLoader(train_dataset, batch_size=config['batch_size'], shuffle=True, collate_fn=Info_docvqa_collate_fn)
+    val_data_loader   = DataLoader(val_dataset, batch_size=config['batch_size'], shuffle=False, collate_fn=Info_docvqa_collate_fn)
     # train_data_loader = DataLoader(train_dataset, batch_size=config['batch_size'], shuffle=True, collate_fn=singledocvqa_collate_fn, worker_init_fn=seed_worker, generator=g)
     # val_data_loader   = DataLoader(val_dataset, batch_size=config['batch_size'],  shuffle=False, collate_fn=singledocvqa_collate_fn, worker_init_fn=seed_worker, generator=g)
 

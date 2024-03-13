@@ -26,6 +26,8 @@ def parse_args():
     parser.add_argument('--seed', type=int, help='Seed to allow reproducibility.')
     parser.add_argument('--save-dir', type=str, help='Seed to allow reproducibility.')
 
+    parser.add_argument('-o', '--apply_ocr', type=str, help='check whether there is raw ocr tokens.', default=False)
+
     parser.add_argument('--data-parallel', action='store_true', help='Boolean to overwrite data-parallel arg in config parallelize the execution.')
     parser.add_argument('--no-data-parallel', action='store_false', dest='data_parallel', help='Boolean to overwrite data-parallel arg in config to indicate to parallelize the execution.')
     return parser.parse_args()

@@ -18,7 +18,7 @@ def build_optimizer(model, length_train_loader, config):
 
 def build_model(config):
 
-    available_models = ['bertqa', 'longformer', 'bigbird', 'layoutlmv2', 'layoutlmv3', 't5', 'vt5', 'hi-vt5']
+    available_models = ['bertqa', 'longformer', 'bigbird', 'layoutlmv2', 'layoutlmv3', 't5', 'vt5', 'hi-vt5','hy']
     if config['model_name'].lower() == 'bert' or config['model_name'].lower() == 'bertqa':
         from models.BertQA import BertQA
         model = BertQA(config)
@@ -38,6 +38,11 @@ def build_model(config):
     elif config['model_name'].lower() == 'layoutlmv3':
         from models.LayoutLMv3 import LayoutLMv3
         model = LayoutLMv3(config)
+
+    elif config['model_name'].lower() == 'hy':
+        from models.LayoutLMv3_hy import LayoutLMv3_hy
+        model = LayoutLMv3_hy(config)
+        
 
     elif config['model_name'].lower() == 't5':
         from models.T5 import T5
@@ -66,15 +71,15 @@ def build_dataset(config, split):
     # Specify special params for data processing depending on the model used.
     dataset_kwargs = {}
 
-    if config['model_name'].lower() in ['layoutlmv2', 'layoutlmv3', 'lt5', 'vt5', 'hilt5', 'hi-lt5', 'hivt5', 'hi-vt5']:
+    if config['model_name'].lower() in ['layoutlmv2', 'layoutlmv3', 'lt5', 'vt5', 'hilt5', 'hi-lt5', 'hivt5', 'hi-vt5','hy']:
         dataset_kwargs['get_raw_ocr_data'] = True
 
-    if config['model_name'].lower() in ['layoutlmv2', 'layoutlmv3', 'vt5', 'hivt5', 'hi-vt5']:
+    if config['model_name'].lower() in ['layoutlmv2', 'layoutlmv3', 'vt5', 'hivt5', 'hi-vt5','hy']:
         dataset_kwargs['use_images'] = True
 
-    if config['model_name'].lower() in ['hilt5', 'hi-lt5', 'hivt5', 'hi-vt5']:
-        dataset_kwargs['max_pages'] = config.get('max_pages', 1)
-        dataset_kwargs['hierarchical_method'] = True
+    # if config['model_name'].lower() in ['hilt5', 'hi-lt5', 'hivt5', 'hi-vt5']:
+    #     dataset_kwargs['max_pages'] = config.get('max_pages', 1)
+    #     dataset_kwargs['hierarchical_method'] = True
 
     # Build dataset
     if config['dataset_name'] == 'SP-DocVQA':

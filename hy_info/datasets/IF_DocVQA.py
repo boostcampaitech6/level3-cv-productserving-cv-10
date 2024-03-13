@@ -11,13 +11,14 @@ class IFDocVQA(Dataset):
 
     def __init__(self, imbd_dir, images_dir, split, kwargs):
         data = np.load(os.path.join(imbd_dir, "infographics_imdb_{:s}.npy".format(split)), allow_pickle=True)
-        self.header = data[0]
-        self.imdb = data[1:]
-        self.hierarchical_method = kwargs.get('hierarchical_method', False)
+        # self.header = data[0]
+        # self.imdb = data[1:]
+        self.imdb = data
 
         self.max_answers = 2
         self.images_dir = images_dir
 
+        # self.hierarchical_method = kwargs.get('hierarchical_method', False)
         self.use_images = kwargs.get('use_images', False)
         self.get_raw_ocr_data = kwargs.get('get_raw_ocr_data', False)
 
@@ -26,36 +27,36 @@ class IFDocVQA(Dataset):
 
     def __getitem__(self, idx):
         record = self.imdb[idx]
-        # print(record)
         question = record['question']
-        # print(len(question)) #내가
         context = ' '.join([word.lower() for word in record['ocr_tokens']])
-        context_page_corresp = [0 for ix in range(len(context))]  # This is used to predict the answer page in MP-DocVQA. To keep it simple, use a mock list with corresponding page to 0.
-        # print(record) #내가 
+        # context_page_corresp = [0 for ix in range(len(context))]  # This is used to predict the answer page in MP-DocVQA. To keep it simple, use a mock list with corresponding page to 0.
         
         #나중에 if문 걸어서 train/inference 따로 
         if 'answers' in record :
             answers = list(set(answer.lower() for answer in record['answers']))
         else : 
-            answers = ['0' * len(question)] ###### 이거 
-        # print(answers)
+            answers = ['0' * len(question)] 
         # answers = list(set(answer.lower() for answer in record.get('answers', [])))
         
-
         if self.use_images:
             # image_name = os.path.join(self.images_dir, "{:s}.png".format(record['image_name']))
             image_name = os.path.join(self.images_dir, "{:s}".format(record['image_name']))
             image = Image.open(image_name).convert("RGB")
-
+        
         if self.get_raw_ocr_data:
             words = [word.lower() for word in record['ocr_tokens']]
+            context = ' '.join([word.lower() for word in record['ocr_tokens']])
             boxes = np.array([bbox for bbox in record['ocr_normalized_boxes']])
-
-        if self.hierarchical_method:
-            words = [words]
-            boxes = [boxes]
-            image_name = [image_name]
-            image = [image]
+        # else:
+        #     words = 
+        #     context = procsec
+        #     boxes = 
+            
+        # if self.hierarchical_method:
+        #     words = [words]
+        #     boxes = [boxes]
+        #     image_name = [image_name]
+        #     image = [image]
 
         start_idxs, end_idxs = self._get_start_end_idx(context, answers)
 
@@ -65,20 +66,21 @@ class IFDocVQA(Dataset):
                        'answers': answers,
                        'start_indxs': start_idxs,
                        'end_indxs': end_idxs
-                       }
+                       }        
 
         if self.use_images:
             sample_info['image_names'] = image_name
             sample_info['images'] = image
+        
 
         if self.get_raw_ocr_data:
             sample_info['words'] = words
             sample_info['boxes'] = boxes
-            sample_info['num_pages'] = 1
-            sample_info['answer_page_idx'] = 0
+            # sample_info['num_pages'] = 1
+            # sample_info['answer_page_idx'] = 0
 
         else:  # Information for extractive models
-            sample_info['context_page_corresp'] = context_page_corresp
+            # sample_info['context_page_corresp'] = context_page_corresp
             sample_info['start_indxs'] = start_idxs
             sample_info['end_indxs'] = end_idxs
 
@@ -102,7 +104,7 @@ class IFDocVQA(Dataset):
         return start_idx, end_idx
 
 
-def singlepage_docvqa_collate_fn(batch):
+def Info_docvqa_collate_fn(batch):
     batch = {k: [dic[k] for dic in batch] for k in batch[0]}  # List of dictionaries to dict of lists.
     return batch
 
@@ -110,3 +112,4 @@ def singlepage_docvqa_collate_fn(batch):
 if __name__ == '__main__':
     # singlepage_docvqa = SPDocVQA("/SSD/Datasets/DocVQA/Task1/pythia_data/imdb/docvqa/", split='val')
     infographic_docvqa = IFDocVQA("../task3/imdb/", split='val')
+    # infographic_docvqa = IFDocVQA("../Task3_test/imdb/", split='val')

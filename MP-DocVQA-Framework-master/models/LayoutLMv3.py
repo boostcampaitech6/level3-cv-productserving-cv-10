@@ -82,9 +82,14 @@ class LayoutLMv3:
                 answ_confidence.append(max_logits)
 
         else:
-
             boxes = [(bbox * 1000).astype(int) for bbox in batch['boxes']]  # Scale boxes 0->1 to 0-->1000.
             encoding = self.processor(images, question, batch["words"], boxes=boxes, return_tensors="pt", padding=True, truncation=True).to(self.model.device)
+            # if apply_ocr == True:
+            #     boxes = [(bbox * 1000).astype(int) for bbox in batch['boxes']]  # Scale boxes 0->1 to 0-->1000.
+            #     encoding = self.processor(images, question, batch["words"], boxes=boxes, return_tensors="pt", padding=True, truncation=True).to(self.model.device)
+            # else:
+            #     encoding = self.processor(images, question, return_tensors="pt", padding=True, truncation=True).to(self.model.device)
+            #     context = encoding[3]
 
             start_pos, end_pos = self.get_start_end_idx(encoding, context, answers)
             outputs = self.model(**encoding, start_positions=start_pos, end_positions=end_pos)

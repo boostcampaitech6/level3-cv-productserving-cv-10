@@ -34,15 +34,16 @@ def evaluate(data_loader, model, evaluator, **kwargs):
     for batch_idx, batch in enumerate(tqdm(data_loader)):
         bs = len(batch['question_id'])
         with torch.no_grad():
-            outputs, pred_answers, pred_answer_page, answer_conf = model.forward(batch, return_pred_answer=True)
+            # outputs, pred_answers, pred_answer_page, answer_conf = model.forward(batch, return_pred_answer=True)
+            outputs, pred_answers, answer_conf = model.forward(batch, return_pred_answer=True)
             # print(pred_answers)
 
         metric = evaluator.get_metrics(batch['answers'], pred_answers, batch.get('answer_type', None))
 
-        if 'answer_page_idx' in batch and pred_answer_page is not None:
-            ret_metric = evaluator.get_retrieval_metric(batch['answer_page_idx'], pred_answer_page)
-        else:
-            ret_metric = [0 for _ in range(bs)]
+        # if 'answer_page_idx' in batch and pred_answer_page is not None:
+        #     ret_metric = evaluator.get_retrieval_metric(batch['answer_page_idx'], pred_answer_page)
+        # else:
+        #     ret_metric = [0 for _ in range(bs)]
 
         if return_scores_by_sample:
             for batch_idx in range(bs):
@@ -50,10 +51,10 @@ def evaluate(data_loader, model, evaluator, **kwargs):
                 scores_by_samples[batch['question_id'][batch_idx]] = {
                     'accuracy': metric['accuracy'][batch_idx],
                     'anls': metric['anls'][batch_idx],
-                    'ret_prec': ret_metric[batch_idx],
+                    # 'ret_prec': ret_metric[batch_idx],
                     'pred_answer': pred_answers[batch_idx],
                     'pred_answer_conf': answer_conf[batch_idx],
-                    'pred_answer_page': pred_answer_page[batch_idx] if pred_answer_page is not None else None,
+                    # 'pred_answer_page': pred_answer_page[batch_idx] if pred_answer_page is not None else None,
                     'image_names' : batch['image_names'][batch_idx], # 여기서 부터 추가한 부분
                     'question' : batch['questions'][batch_idx], 
 
@@ -63,12 +64,12 @@ def evaluate(data_loader, model, evaluator, **kwargs):
         if return_scores_by_sample:
             total_accuracies.extend(metric['accuracy'])
             total_anls.extend(metric['anls'])
-            total_ret_prec.extend(ret_metric)
+            # total_ret_prec.extend(ret_metric)
 
         else:
             total_accuracies += sum(metric['accuracy'])
             total_anls += sum(metric['anls'])
-            total_ret_prec += sum(ret_metric)
+            # total_ret_prec += sum(ret_metric)
 
         if return_answers:
             all_pred_answers.extend(pred_answers)

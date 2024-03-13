@@ -32,7 +32,8 @@ class Logger:
         if page_tokens:
             config['PAGE tokens'] = page_tokens
 
-        self.logger = wb.init(project="MP-DocVQA", name=self.experiment_name, dir=self.log_folder, tags=tags, config=config)
+        # self.logger = wb.init(project="MP-DocVQA", name=self.experiment_name, dir=self.log_folder, tags=tags, config=config)
+        self.logger = wb.init(project="Hyunyoung in the house motherfuckers~", name=self.experiment_name, dir=self.log_folder, tags=tags, config=config)
         self._print_config(config)
 
         self.current_epoch = 0

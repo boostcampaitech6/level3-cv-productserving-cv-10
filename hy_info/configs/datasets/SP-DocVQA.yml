@@ -1,4 +1,0 @@
-dataset_name: SP-DocVQA
-# imdb_dir: /SSD2/Datasets/DocVQA/Task1/pythia_data/imdb/docvqa  # /imdb/collection/imdb_train.npy
-imdb_dir: /home/ges/level3-cv-productserving-cv-10/data/infographics/imdb
-images_dir: /home/ges/level3-cv-productserving-cv-10/data/infographics/images
