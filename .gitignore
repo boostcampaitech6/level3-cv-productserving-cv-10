@@ -34,3 +34,4 @@ saved_dir
 *.zip
 *.npy
 *.run
+wandb
