@@ -121,7 +121,7 @@ class BeneTechDataset(Dataset):
         item = self.dataset[idx]
         img_path = '/home/lym/level3-cv-productserving-cv-10/data/images/'+ item['image_local_name']
         # img_path = '/home/lym/level3-cv-productserving-cv-10/data_select/task3_infographic/images/'+ item['image_local_name']
-        print("img ->", item['image_local_name'])
+        # print("img ->", item['image_local_name'])
         image = np.array(Image.open(img_path))
         # image = cv2.imread(item['image'])
         if self.augments:
@@ -279,11 +279,11 @@ if __name__ == "__main__":
     # Read the processed JSON file
     with open("/home/lym/level3-cv-productserving-cv-10/data/qas/infographicsVQA_train_v1.0_custom.json", "r") as fl:
         train_dataset = json.load(fl)['data']
-    # with open("/home/lym/level3-cv-productserving-cv-10/data/qas/infographicsVQA_val_v1.0_withQT.json", "r") as fl:
-    #     val_dataset = json.load(fl)['data']
+    with open("/home/lym/level3-cv-productserving-cv-10/data/qas/infographicsVQA_val_v1.0_withQT_custom.json", "r") as fl:
+        val_dataset = json.load(fl)['data']
         
     # Shuffle the dataset and select however samples you want for training
-    # shuffle(train_dataset)  # 이거 나중에 풀자.
+    shuffle(train_dataset) 
     # dataset = dataset[:Config['ALL_SAMPLES']]
     
     # We are splitting the data naively for now
@@ -291,12 +291,12 @@ if __name__ == "__main__":
     # train_samples = int(len(dataset) * split)
     # train_ds = dataset[:train_samples+1]
     # valid_ds = dataset[train_samples:]
-    # train_ds = train_dataset
-    # valid_ds = val_dataset
+    train_ds = train_dataset
+    valid_ds = val_dataset
 
-    train_samples = int(len(train_dataset) * split)
-    train_ds = train_dataset[:train_samples+1]
-    valid_ds = train_dataset[train_samples:]
+    # train_samples = int(len(train_dataset) * split)
+    # train_ds = train_dataset[:train_samples]
+    # valid_ds = train_dataset[train_samples:]
 
     # Yeah all that
     processor, model = get_model()
@@ -311,7 +311,7 @@ if __name__ == "__main__":
     
     # Load the data into Datasets and then make DataLoaders for training
     train_dataset = BeneTechDataset(train_ds, processor, augments=augments())
-    train_dataloader = DataLoader(train_dataset, shuffle=False, batch_size=Config['TRAIN_BS'], collate_fn=collator) # sulffle true 주자
+    train_dataloader = DataLoader(train_dataset, shuffle=True, batch_size=Config['TRAIN_BS'], collate_fn=collator)
     
     valid_dataset = BeneTechDataset(valid_ds, processor, augments=augments())
     valid_dataloader = DataLoader(valid_dataset, shuffle=False, batch_size=Config['VALID_BS'], collate_fn=collator)
