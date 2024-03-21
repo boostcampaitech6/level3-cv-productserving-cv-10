@@ -1,8 +1,0 @@
-dataset_name: infographicVQA
-# imdb_dir: /SSD2/Datasets/DocVQA/Task1/pythia_data/imdb/docvqa  # /imdb/collection/imdb_train.npy
-
-imdb_dir: ./task3/imdb
-images_dir: ./task3/images
-
-# imdb_dir: ./Task3_test/imdb
-# images_dir: ./Task3_test/images
