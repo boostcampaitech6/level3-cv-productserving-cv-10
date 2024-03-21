@@ -3,9 +3,9 @@
 
 🚀 **[모델 시연 바로가기](https://app-test-hapfsdaay6yfrirfdoagqg.streamlit.app/)** 🚀
 
-InfographicsVQA는 DocVQA task의 한 종류로서 Document의 내용에 대한 질의 응답을 하는 multi-modal AI입니다.
+InfographicsVQA는 DocVQA task의 한 종류로서 Document의 내용에 대한 질의 응답을 하는 **multi-modal AI**입니다.
 
-특히, Documentation내부에 Infographic한 data[table, figure, map등]가 많이 포함돼있는 경우에 특화된 모델입니다
+특히, Documentation내부에 Infographic한 data[table, figure, map등]가 많이 포함돼있는 경우에 특화된 모델입니다.
 
 Backbone model로서 **Pix2Struct**를 활용하였고 아래는 기존 모델들과 다른 특징입니다.
 
